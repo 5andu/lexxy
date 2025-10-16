@@ -23,6 +23,7 @@ const COMMANDS = [
   "strikethrough",
   "link",
   "unlink",
+  "highlight",
   "rotateHeadingFormat",
   "insertUnorderedList",
   "insertOrderedList",
@@ -64,6 +65,11 @@ export class CommandDispatcher {
 
   dispatchStrikethrough() {
     this.editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")
+  }
+
+  dispatchHighlight() {
+    this.editor.dispatchCommand(FORMAT_TEXT_COMMAND, "highlight")
+
   }
 
   dispatchLink(url) {
