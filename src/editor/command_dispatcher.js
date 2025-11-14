@@ -2,6 +2,7 @@ import {
   $createTextNode,
   $getSelection,
   $isRangeSelection,
+  $isNodeSelection,
   COMMAND_PRIORITY_LOW,
   FORMAT_TEXT_COMMAND,
   PASTE_COMMAND,
@@ -16,7 +17,7 @@ import { $createAutoLinkNode, $toggleLink } from "@lexical/link"
 import { createElement } from "../helpers/html_helper"
 import { getListType } from "../helpers/lexical_helper"
 import { HorizontalDividerNode } from "../nodes/horizontal_divider_node"
-import { $patchStyleText } from "@lexical/selection"
+import { $patchStyleText, $getSelectionStyleValueForProperty } from "@lexical/selection"
 
 const COMMANDS = [
   "bold",
@@ -68,19 +69,24 @@ export class CommandDispatcher {
     this.editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")
   }
 
-  dispatchHighlight() {
-    this.editor.dispatchCommand(FORMAT_TEXT_COMMAND, "highlight")
-
+  dispatchHighlight(color = {}) {
     this.editor.update(() => {
-        const selection = $getSelection()
-        const isHighlighted = selection.hasFormat("highlight")
-        if (isHighlighted) {
-          $patchStyleText(selection, {"background-color": "purple", color: "yellow"})
-        } else {
-          $patchStyleText(selection, {"background-color": null, color: null})
-        }
+      const selection = $getSelection()
+      if (!$isRangeSelection(selection)) return
+
+      if (!selection.hasFormat("highlight")) {
+        this.editor.dispatchCommand(FORMAT_TEXT_COMMAND, "highlight")
       }
-    )
+
+      $patchStyleText(selection, color);
+
+      const textColor = $getSelectionStyleValueForProperty(selection, "color", "");
+      const backgroundColor = $getSelectionStyleValueForProperty(selection, "background-color", "");
+
+      if (textColor == "" && backgroundColor == "") {
+        this.editor.dispatchCommand(FORMAT_TEXT_COMMAND, "highlight")
+      }
+    })
   }
 
   dispatchLink(url) {

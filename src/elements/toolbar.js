@@ -66,9 +66,18 @@ export default class LexicalToolbarElement extends HTMLElement {
 
   // Not using popover because of CSS anchoring still not widely available.
   #toggleDialog(button) {
-    const dialog = this.querySelector("lexxy-link-dialog .link-dialog").parentNode
+    const dialogTarget = button.dataset.dialogTarget
+    let dialog
 
-    if (dialog.open) {
+    if (dialogTarget === "link-dialog") {
+      dialog = this.querySelector("lexxy-link-dialog")
+    } else if (dialogTarget === "color-dialog") {
+      dialog = this.querySelector("lexxy-color-dialog")
+    }
+
+    if (!dialog) return
+
+    if (dialog.dialog && dialog.dialog.open) {
       dialog.close()
     } else {
       dialog.show()
@@ -280,9 +289,38 @@ export default class LexicalToolbarElement extends HTMLElement {
         </dialog>
       </lexxy-link-dialog>
 
-      <button class="lexxy-editor__toolbar-button" type="button" name="highlight" title="Color highlight" data-command="highlight" value="red">
+      <button class="lexxy-editor__toolbar-button" type="button" name="highlight" title="Color highlight" data-dialog-target="color-dialog">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.65422 0.711575C7.1856 0.242951 6.42579 0.242951 5.95717 0.711575C5.48853 1.18021 5.48853 1.94 5.95717 2.40864L8.70864 5.16011L2.85422 11.0145C1.44834 12.4204 1.44833 14.6998 2.85422 16.1057L7.86011 21.1115C9.26599 22.5174 11.5454 22.5174 12.9513 21.1115L19.6542 14.4087C20.1228 13.94 20.1228 13.1802 19.6542 12.7115L11.8544 4.91171L11.2542 4.31158L7.65422 0.711575ZM4.55127 12.7115L10.4057 6.85716L17.1087 13.56H4.19981C4.19981 13.253 4.31696 12.9459 4.55127 12.7115ZM23.6057 20.76C23.6057 22.0856 22.5311 23.16 21.2057 23.16C19.8802 23.16 18.8057 22.0856 18.8057 20.76C18.8057 19.5408 19.8212 18.5339 20.918 17.4462C21.0135 17.3516 21.1096 17.2563 21.2057 17.16C21.3018 17.2563 21.398 17.3516 21.4935 17.4462C22.5903 18.5339 23.6057 19.5408 23.6057 20.76Z"/></svg>
       </button>
+
+      <lexxy-color-dialog class="lexxy-color-dialog">
+        <dialog class="color-dialog" closedby="any">
+          <div class="lexxy-color-dialog-content">
+            <div data-button-group="color">
+              <button type="button" class="lexxy-color-button" data-color="#887626" style="color: #887626" aria-label="Text color #887626"></button>
+              <button type="button" class="lexxy-color-button" data-color="#B95E06" style="color: #B95E06" aria-label="Text color #B95E06"></button>
+              <button type="button" class="lexxy-color-button" data-color="#CF0000" style="color: #CF0000" aria-label="Text color #CF0000"></button>
+              <button type="button" class="lexxy-color-button" data-color="#D81CAA" style="color: #D81CAA" aria-label="Text color #D81CAA"></button>
+              <button type="button" class="lexxy-color-button" data-color="#9013FE" style="color: #9013FE" aria-label="Text color #9013FE"></button>
+              <button type="button" class="lexxy-color-button" data-color="#0562B9" style="color: #0562B9" aria-label="Text color #0562B9"></button>
+              <button type="button" class="lexxy-color-button" data-color="#118A0F" style="color: #118A0F" aria-label="Text color #118A0F"></button>
+              <button type="button" class="lexxy-color-button" data-color="#945216" style="color: #945216" aria-label="Text color #945216"></button>
+              <button type="button" class="lexxy-color-button" data-color="#666666" style="color: #666666" aria-label="Text color #666666"></button>
+            </div>
+            <div data-button-group="background-color">
+              <button type="button" class="lexxy-color-button" data-color="#FAF785" style="background-color: #FAF785" aria-label="Background color #FAF785"></button>
+              <button type="button" class="lexxy-color-button" data-color="#FFF0DB" style="background-color: #FFF0DB" aria-label="Background color #FFF0DB"></button>
+              <button type="button" class="lexxy-color-button" data-color="#FFE5E5" style="background-color: #FFE5E5" aria-label="Background color #FFE5E5"></button>
+              <button type="button" class="lexxy-color-button" data-color="#FFE4F7" style="background-color: #FFE4F7" aria-label="Background color #FFE4F7"></button>
+              <button type="button" class="lexxy-color-button" data-color="#F2EDFF" style="background-color: #F2EDFF" aria-label="Background color #F2EDFF"></button>
+              <button type="button" class="lexxy-color-button" data-color="#E1EFFC" style="background-color: #E1EFFC" aria-label="Background color #E1EFFC"></button>
+              <button type="button" class="lexxy-color-button" data-color="#E4F8E2" style="background-color: #E4F8E2" aria-label="Background color #E4F8E2"></button>
+              <button type="button" class="lexxy-color-button" data-color="#EEE2D7" style="background-color: #EEE2D7" aria-label="Background color #EEE2D7"></button>
+              <button type="button" class="lexxy-color-button" data-color="#F2F2F2" style="background-color: #F2F2F2" aria-label="Background color #F2F2F2"></button>
+            </div>
+          </div>
+        </dialog>
+      </lexxy-color-dialog>
 
       <button class="lexxy-editor__toolbar-button" type="button" name="quote" data-command="insertQuoteBlock" title="Quote">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5C8.985 5 11 7.09 11 9.667c0 2.694-.962 5.005-2.187 6.644-.613.82-1.3 1.481-1.978 1.943-.668.454-1.375.746-2.022.746a.563.563 0 01-.52-.36.602.602 0 01.067-.57l.055-.066.009-.009.041-.048a4.25 4.25 0 00.168-.21c.143-.188.336-.47.53-.84a6.743 6.743 0 00.75-2.605C3.705 13.994 2 12.038 2 9.667 2 7.089 4.015 5 6.5 5zM17.5 5C19.985 5 22 7.09 22 9.667c0 2.694-.962 5.005-2.187 6.644-.613.82-1.3 1.481-1.978 1.943-.668.454-1.375.746-2.023.746a.563.563 0 01-.52-.36.602.602 0 01.068-.57l.055-.066.009-.009.041-.048c.039-.045.097-.115.168-.21a6.16 6.16 0 00.53-.84 6.745 6.745 0 00.75-2.605C14.705 13.994 13 12.038 13 9.667 13 7.089 15.015 5 17.5 5z"/></svg>
