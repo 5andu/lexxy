@@ -8461,6 +8461,7 @@ class LexicalEditorElement extends HTMLElement {
     this.#registerComponents();
     this.#listenForInvalidatedNodes();
     this.#handleEnter();
+    this.#handleFocus();
     this.#attachDebugHooks();
     this.#attachToolbar();
     this.#loadInitialValue();
@@ -8637,6 +8638,14 @@ class LexicalEditorElement extends HTMLElement {
       },
       Ri
     );
+  }
+
+  #handleFocus() {
+    // Lexxy handles focus and blur as commands
+    // see https://github.com/facebook/lexical/blob/d1a8e84fe9063a4f817655b346b6ff373aa107f0/packages/lexical/src/LexicalEvents.ts#L35
+    // and https://stackoverflow.com/a/72212077
+    this.editor.registerCommand(Ye, () => { dispatch(this, "lexxy:blur"); }, Ri);
+    this.editor.registerCommand(Ve$1, () => { dispatch(this, "lexxy:focus"); }, Ri);
   }
 
   #attachDebugHooks() {
